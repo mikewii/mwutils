@@ -6,6 +6,7 @@ cd build
 cmake ..
 make
 sudo make install
+sudo ldconfig
 ```
 project configured to build both static and shared libs at same time
 
