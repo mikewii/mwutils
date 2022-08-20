@@ -107,7 +107,7 @@ std::string to_string(const T& u, const bool uppercase = false)
         unsigned char u8[sizeof(T)];
     };
 
-    const mask& mask = reinterpret_cast<const union mask&>(&u);
+    const mask& mask = reinterpret_cast<const union mask&>(u);
 
     for (size_t i = 0; i < sizeof(T); i++) {
         if (uppercase)
