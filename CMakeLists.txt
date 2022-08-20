@@ -25,7 +25,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_HEADERS})
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${PROJECT_HEADERS}")
 set_target_properties(${PROJECT_NAME}_shared PROPERTIES SOVERSION 1)
 include(GNUInstallDirs)
 

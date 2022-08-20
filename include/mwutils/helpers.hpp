@@ -28,42 +28,75 @@
  * source code, you may redistribute such embedded portions in such object form
  * without including the above copyright and permission notices.
 */
-#include <mwutils/helpers.hpp>
-#include <iostream>
-#include <cstring>
+
+#pragma once
+#include <mwutils/types.hpp>
+#include <sstream>
+#include <iomanip>
+#include <climits>
 
 namespace mwutils {
-void init(void)
-{
-    random::seed_rng();
-}
+    void init(void);
+
+namespace random {
+    void    seed_rng(void);
+
+    s32     get_random(s32 min, s32 max);
+    bool    get_random(void);
+}; /* namespace random */
 
 namespace print {
-void as_hex(const void* const data, const int data_size)
-{
-    const u8* const as_char = reinterpret_cast<const u8* const>(data);
-
-    for (int i = 1; i < data_size + 1; i++) {
-        u32 value = static_cast<u32>(as_char[i - 1]);
-
-        std::cout << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << value << " ";
-
-        if (i % 8 == 0) {
-            std::cout << std::endl;
-        } else if (i % 4 == 0) {
-            std::cout << "  ";
-        }
-    }
-
-    std::cout << std::endl;
-}
+    void    as_hex(const void* const data, const int data_size);
 }; /* namespace print */
 
-void* copy_bytes(void* dest, const void* src, const size_t size)
+namespace convert {
+template <typename T>
+std::string to_string(const T& u, const bool uppercase = false)
 {
-    if ((reinterpret_cast<u64>(dest) % sizeof(dest)) == 0)
-        return memcpy(dest, src, size);
+    std::stringstream ss;
 
-    return memmove(dest, src, size);
+    union mask {
+        T u;
+        unsigned char u8[sizeof(T)];
+    };
+
+    const mask& mask = reinterpret_cast<const union mask&>(u);
+
+    for (size_t i = 0; i < sizeof(T); i++) {
+        if (uppercase)
+            ss << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << static_cast<u32>(mask.u8[i]);
+        else
+            ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<u32>(mask.u8[i]);
+    }
+
+    return ss.str();
 }
+}; /* namespace convert */
+
+namespace endianess {
+template <typename T>
+static T swap(const T u)
+{
+    static_assert (CHAR_BIT == 8, "CHAR_BIT != 8");
+
+    union {
+        T u;
+        unsigned char u8[sizeof(T)];
+    } source, dest;
+
+    source.u = u;
+
+    for (std::size_t k = 0; k < sizeof(T); k++)
+        dest.u8[k] = source.u8[sizeof(T) - k - 1];
+
+    return dest.u;
+}
+}; /* namespace endianess */
+
+///
+/// \brief alignment safe copy
+///
+void* copy_bytes(void* dest, const void* src, const size_t size);
+
 }; /* namespace utils */
+

@@ -28,42 +28,17 @@
  * source code, you may redistribute such embedded portions in such object form
  * without including the above copyright and permission notices.
 */
-#include <mwutils/helpers.hpp>
-#include <iostream>
-#include <cstring>
 
-namespace mwutils {
-void init(void)
-{
-    random::seed_rng();
-}
+#pragma once
+/// Aligns a struct (and other types?) to m, making sure that the size of the struct is a multiple of m.
+#define ALIGN(m)        __attribute__((aligned(m)))
+/// Packs a struct (and other types?) so it won't include padding bytes.
+#define PACKED          __attribute__((packed))
 
-namespace print {
-void as_hex(const void* const data, const int data_size)
-{
-    const u8* const as_char = reinterpret_cast<const u8* const>(data);
-
-    for (int i = 1; i < data_size + 1; i++) {
-        u32 value = static_cast<u32>(as_char[i - 1]);
-
-        std::cout << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << value << " ";
-
-        if (i % 8 == 0) {
-            std::cout << std::endl;
-        } else if (i % 4 == 0) {
-            std::cout << "  ";
-        }
-    }
-
-    std::cout << std::endl;
-}
-}; /* namespace print */
-
-void* copy_bytes(void* dest, const void* src, const size_t size)
-{
-    if ((reinterpret_cast<u64>(dest) % sizeof(dest)) == 0)
-        return memcpy(dest, src, size);
-
-    return memmove(dest, src, size);
-}
-}; /* namespace utils */
+#define USED            __attribute__((used))
+#define UNUSED          __attribute__((unused))
+#define DEPRECATED      __attribute__((deprecated))
+#define NAKED           __attribute__((naked))
+#define NORETURN        __attribute__((noreturn))
+#define ALWAYS_INLINE   __attribute__((always_inline))
+#define WEAK            __attribute__((weak))

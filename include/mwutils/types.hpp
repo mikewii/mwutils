@@ -28,42 +28,39 @@
  * source code, you may redistribute such embedded portions in such object form
  * without including the above copyright and permission notices.
 */
-#include <mwutils/helpers.hpp>
-#include <iostream>
-#include <cstring>
 
-namespace mwutils {
-void init(void)
-{
-    random::seed_rng();
-}
+#pragma once
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+/// The maximum value of a u64.
+#define U64_MAX	UINT64_MAX
 
-namespace print {
-void as_hex(const void* const data, const int data_size)
-{
-    const u8* const as_char = reinterpret_cast<const u8* const>(data);
+/// would be nice if newlib had this already
+#ifndef SSIZE_MAX
+#ifdef SIZE_MAX
+#define SSIZE_MAX ((SIZE_MAX) >> 1)
+#endif
+#endif
 
-    for (int i = 1; i < data_size + 1; i++) {
-        u32 value = static_cast<u32>(as_char[i - 1]);
+typedef char16_t utf16;
 
-        std::cout << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << value << " ";
+typedef uint8_t  u8;  ///<  8-bit unsigned integer
+typedef uint16_t u16; ///< 16-bit unsigned integer
+typedef uint32_t u32; ///< 32-bit unsigned integer
+typedef uint64_t u64; ///< 64-bit unsigned integer
 
-        if (i % 8 == 0) {
-            std::cout << std::endl;
-        } else if (i % 4 == 0) {
-            std::cout << "  ";
-        }
-    }
+typedef int8_t  s8;  ///<  8-bit signed integer
+typedef int16_t s16; ///< 16-bit signed integer
+typedef int32_t s32; ///< 32-bit signed integer
+typedef int64_t s64; ///< 64-bit signed integer
 
-    std::cout << std::endl;
-}
-}; /* namespace print */
+typedef volatile u8 vu8;   ///<  8-bit volatile unsigned integer.
+typedef volatile u16 vu16; ///< 16-bit volatile unsigned integer.
+typedef volatile u32 vu32; ///< 32-bit volatile unsigned integer.
+typedef volatile u64 vu64; ///< 64-bit volatile unsigned integer.
 
-void* copy_bytes(void* dest, const void* src, const size_t size)
-{
-    if ((reinterpret_cast<u64>(dest) % sizeof(dest)) == 0)
-        return memcpy(dest, src, size);
-
-    return memmove(dest, src, size);
-}
-}; /* namespace utils */
+typedef volatile s8 vs8;   ///<  8-bit volatile signed integer.
+typedef volatile s16 vs16; ///< 16-bit volatile signed integer.
+typedef volatile s32 vs32; ///< 32-bit volatile signed integer.
+typedef volatile s64 vs64; ///< 64-bit volatile signed integer.
