@@ -30,7 +30,6 @@
 */
 #include "mwutils/mwutils.hpp"
 #include <iostream>
-#include <iomanip>
 #include <cstring>
 
 namespace mwutils {

@@ -34,6 +34,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <climits>
+#include <sstream>
+#include <iomanip>
 /// The maximum value of a u64.
 #define U64_MAX	UINT64_MAX
 
@@ -93,6 +95,30 @@ namespace random {
 namespace print {
     void    as_hex(const void* const data, const int data_size);
 }; /* namespace print */
+
+namespace convert {
+template <typename T>
+std::string to_string(const T& u, const bool uppercase = false)
+{
+    std::stringstream ss;
+
+    union mask {
+        T u;
+        unsigned char u8[sizeof(T)];
+    };
+
+    const mask& mask = reinterpret_cast<const union mask&>(&u);
+
+    for (size_t i = 0; i < sizeof(T); i++) {
+        if (uppercase)
+            ss << std::uppercase << std::hex << std::setfill('0') << std::setw(2) << static_cast<u32>(mask.u8[i]);
+        else
+            ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<u32>(mask.u8[i]);
+    }
+
+    return ss.str();
+}
+}; /* namespace convert */
 
 namespace endianess {
 template <typename T>
