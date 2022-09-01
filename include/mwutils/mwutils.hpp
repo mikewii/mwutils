@@ -32,4 +32,5 @@
 #pragma once
 #include <mwutils/types.hpp>
 #include <mwutils/attributes.hpp>
+#include <mwutils/structures.hpp>
 #include <mwutils/helpers.hpp>
